@@ -1,0 +1,77 @@
+---
+title: "SEM II_HW1"
+author: "CC"
+date: "April 8, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+#ALL PREDICTORS
+CFA1 <-'depall =~ BDI1 + BDI2 + BDI3 + BDI4 + BDI5 + BDI6 + BDI7 + BDI8 + BDI9 + BDI10 + BDI11 + BDI12 + BDI13 + BDI14 + BDI15 + BDI16 + BDI17 + BDI18 + BDI19 + BDI20 + BDI21'
+
+fit_CFA1 <- cfa(CFA1, 
+           sample.cov = BDIgirl,
+           sample.nobs= 321
+           )
+summary(fit_CFA1, standardized = TRUE,fit.measures = TRUE)
+
+#3 Factor Model Construct a three-factor model in which the items 1-3, and 6-9 load on a latent Negative Attitude factor; items 13, 15, 17, 20load on a second Performance Difficulty factor; and items 10, 14, 16, 18load on a third Somatic latent factor. Allow the three latent factors to correlate freely. 
+
+CFA2 <-'
+PerDif =~ BDI13 + BDI15 + BDI15 + BDI17 +BDI20
+NegAt =~ BDI1 + BDI2 + BDI3 + BDI6 + BDI7 + BDI8 + BDI9
+Som =~ BDI10 + BDI14 + BDI16 +  BDI18
+'
+
+fit_CFA2 <- cfa(CFA2, 
+           sample.cov = BDIgirl,
+           sample.nobs= 321
+           )
+summary(fit_CFA2, standardized = TRUE, fit.measures = TRUE)
+
+#Bifactor Now construct a HCFA model by adding a second order latent variable, Depression, that predicts each of the latent variables in the three-factor modeling question 3
+
+CFA3 <-'
+PerDif =~ BDI13 + BDI15 + BDI17 +BDI20
+NegAt =~ BDI1 + BDI2 + BDI3 + BDI6 + BDI7 + BDI8 + BDI9
+Som =~ BDI10 + BDI14 + BDI16 +  BDI18
+
+
+depall =~ PerDif + NegAt + Som
+'
+fit_CFA3 <- cfa(CFA3, 
+           sample.cov = BDIgirl,
+           sample.nobs= 321
+           )
+summary(fit_CFA3, standardized = TRUE, fit.measures = TRUE)
+
+anova(fit_CFA1, fit_CFA2)
+anova(fit_CFA1, fit_CFA2, fit_CFA3)
+
+modindices(fit_CFA2, sort. = TRUE, minimum.value = 5)
+modindices(fit_CFA3, sort. = TRUE, minimum.value = 5)
+
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
